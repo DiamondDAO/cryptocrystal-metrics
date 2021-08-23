@@ -37,8 +37,8 @@ if not main_data_path.is_file():
     main_data_path = Path("../../dat/cryptocrystal/last_date_listener.txt")
 
 with open(main_data_path, "r") as file:
-    last_date = parse_iso_date(file.readline())
-    new_changes = int(file.readline())
+    last_date = parse_iso_date(file.readline().replace("\n", ""))
+    new_changes = int(file.readline().replace("\n", ""))
 
 offset = 0
 event_querystring["occurred_after"] = last_date.isoformat()
