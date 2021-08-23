@@ -4,6 +4,8 @@ from botocore.exceptions import ClientError
 
 
 def update_type_table(table, crystal_type, last_sale):
+    if crystal_type == "Tigers Eye":
+        crystal_type = "Tiger's Eye"
     try:
         update_type_response = table.update_item(
             Key={"crystal_type": crystal_type},
