@@ -98,7 +98,7 @@ else:
         )
         new_table_html = json.loads(r.content)["new_type_table"]
         g = Github(os.environ["GITHUB_ACCESS_TOKEN"])
-        repo = g.get_repo("rohanbansal12/testing")
+        repo = g.get_repo("diamonddao/cryptocrystal-metrics")
         commit_response = update_type_table_repo(repo, "docs/index.html", new_table_html)
         print(commit_response)
         new_changes = 0
