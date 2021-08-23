@@ -14,7 +14,9 @@ from util.aws_util import update_type_table
 
 # get chrome_options and capabilites for selenium
 chrome_options, capabilites = generate_driver_settings("xx")
-driver = webdriver.Chrome("chromedriver.exe", options=chrome_options, desired_capabilities=capabilites,)
+driver = webdriver.Chrome(
+    "/users/rohan/diamond/random/chromedriver.exe", options=chrome_options, desired_capabilities=capabilites,
+)
 
 dynamodb = boto3.resource("dynamodb")
 table = dynamodb.Table("crystal_type_table")
@@ -26,9 +28,13 @@ while "LastEvaluatedKey" in response:
     response = table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
     data.extend(response["Items"])
 
-crystal_types = clean_type_entries(data)
+rarity_list, crystal_types = clean_type_entries(data)
+for idx, item in enumerate(crystal_types):
+    crystal_types[idx]["last_sale"] = None
+
 
 for _ in range(3):
+    print("Iteration: ", _)
     for idx, entry in enumerate(crystal_types):
         if _ > 0:
             if entry["last_sale"]:
@@ -72,5 +78,6 @@ for _ in range(3):
             timestamp = datetime.strftime(datetime.strptime(raw_date, "%b-%d-%Y %I:%M:%S %p"), "%Y-%m-%dT%H:%M:%S")
             current_last_sale["timestamp"] = timestamp
             crystal_types[idx]["last_sale"] = current_last_sale
+            print(current_last_sale)
             update_response = update_type_table(table, entry["crystal_type"], current_last_sale)
             break

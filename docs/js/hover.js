@@ -75,7 +75,7 @@ $(document).ready(function () {
           .css("cursor", "pointer")
           .attr(
             "title",
-            "Price divided by the weight of the last sale of this crystal type"
+            "The total value of this crystal type based on the last sale and average weight of these crystals"
           );
       },
       function () {
@@ -91,7 +91,7 @@ $(document).ready(function () {
           .css("cursor", "pointer")
           .attr(
             "title",
-            "Unit price multiplied with the total weight of this crystal type"
+            "The adjusted market cap based on the implied market cap as well as the weighted rarity and total market cap of cryptocrystals"
           );
       },
       function () {

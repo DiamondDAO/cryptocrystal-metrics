@@ -38,7 +38,3 @@ def generate_driver_settings(proxy):
     """
     return chrome_options, capabilites
 
-
-# get chrome_options and capabilites for selenium
-chrome_options, capabilites = generate_driver_settings("xx")
-driver = webdriver.Chrome("chromedriver.exe", options=chrome_options, desired_capabilities=capabilites,)
