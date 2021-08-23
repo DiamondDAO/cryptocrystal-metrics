@@ -34,7 +34,7 @@ headers = {"Accept": "application/json"}
 main_data_path = Path("/home/ubuntu/dat/cryptocrystal/last_date_listener.txt")
 
 if not main_data_path.is_file():
-    main_data_path = Path("../../dat/cryptocrystal/last_date_listener.txt")
+    main_data_path = Path("/users/rohan/diamond/dat/cryptocrystal/last_date_listener.txt")
 
 with open(main_data_path, "r") as file:
     last_date = parse_iso_date(file.readline().replace("\n", ""))
@@ -93,7 +93,9 @@ else:
         aws_api_url = "https://quf1ev88a9.execute-api.us-east-2.amazonaws.com/default/return_crystal_types"
         request_payload = {"type_table": "true", "type": "none", "all_types": "false"}
         r = requests.post(
-            aws_api_url, data=request_payload, headers={"Content-Type": "application/json", "origin": "null"}
+            aws_api_url,
+            data=json.dumps(request_payload),
+            headers={"Content-Type": "application/json", "origin": "null"},
         )
         new_table_html = json.loads(r.content)["new_type_table"]
         g = Github(os.environ["GITHUB_ACCESS_TOKEN"])
