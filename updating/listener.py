@@ -27,16 +27,16 @@ event_querystring = {
     "limit": "50",
 }
 
-asset_url = "https://api.opensea.io/api/v1/assets"
+asset_url = "https://api.opensea.io/api/v1/asset/0xcfbc9103362aec4ce3089f155c2da2eea1cb7602/"
 asset_querystring = {"order_direction": "desc", "offset": "0", "limit": "20", "collection": "cryptocrystal"}
 
 headers = {"Accept": "application/json"}
-main_path = Path("/home/ubuntu/dat/cryptocrystal/last_date_listener.txt")
+main_data_path = Path("/home/ubuntu/dat/cryptocrystal/last_date_listener.txt")
 
-if not main_path.is_file():
-    main_path = Path("../../dat/cryptocrystal/last_date_listener.txt")
+if not main_data_path.is_file():
+    main_data_path = Path("../../dat/cryptocrystal/last_date_listener.txt")
 
-with open(main_path, "r") as file:
+with open(main_data_path, "r") as file:
     last_date = parse_iso_date(file.readline())
     new_changes = int(file.readline())
 
@@ -62,12 +62,11 @@ else:
     for event in events:
         current_token_id = event["asset"]["token_id"]
         crystal_type = 0
-        asset_querystring["token_ids"] = current_token_id
-        response = requests.request("GET", asset_url, headers=headers, params=asset_querystring).json()
-        assets = response.get("assets", [])
-        if not assets:
+        current_asset_url = asset_url + current_token_id + "/"
+        asset = requests.request("GET", current_asset_url, headers=headers, params=asset_querystring).json()
+        if not asset:
             continue
-        item = assets[0]
+        item = asset
         trait_test = item.get("traits", [])
         if not trait_test:
             continue
@@ -103,7 +102,7 @@ else:
         print(commit_response)
         new_changes = 0
 
-with open("/home/ubuntu/dat/cryptocrystal/last_date_listener.txt", "w") as file:
+with open(main_data_path, "w") as file:
     file.write(last_date.isoformat())
     file.write("\n")
     file.write(str(new_changes))

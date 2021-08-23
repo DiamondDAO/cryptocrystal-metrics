@@ -91,7 +91,7 @@ $(document).ready(function () {
           .css("cursor", "pointer")
           .attr(
             "title",
-            "The adjusted market cap based on the implied market cap as well as the weighted rarity and total market cap of cryptocrystals"
+            "The adjusted market cap based on the implied market cap as well as the weighted rarity distribution for the types."
           );
       },
       function () {
@@ -107,7 +107,7 @@ $(document).ready(function () {
           .css("cursor", "pointer")
           .attr(
             "title",
-            "Adjusted unit price for crystal type, calculated as a weighted average of scarcities with the total market cap."
+            "Adjusted average price per crystal (based on average weight and crystal count)."
           );
       },
       function () {
