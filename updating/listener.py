@@ -10,6 +10,7 @@ from github import Github
 import os
 import argparse
 from pathlib import Path
+import pandas as pd
 import json
 from util.github_util import update_type_table_repo
 from util.misc_util import clean_type_entries, parse_iso_date
@@ -39,6 +40,21 @@ if not main_data_path.is_file():
 with open(main_data_path, "r") as file:
     last_date = parse_iso_date(file.readline().replace("\n", ""))
     new_changes = int(file.readline().replace("\n", ""))
+
+response = type_table.scan()
+data = response["Items"]
+
+while "LastEvaluatedKey" in response:
+    response = type_table.scan(ExclusiveStartKey=response["LastEvaluatedKey"])
+    data.extend(response["Items"])
+
+rarity_list, crystal_types = clean_type_entries(data)
+for idx, item in enumerate(crystal_types):
+    crystal_types[idx]["last_sale"] = None
+
+crystal_type_df = pd.DataFrame(crystal_types)
+all_types = list(crystal_type_df["crystal_type"])
+
 
 offset = 0
 event_querystring["occurred_after"] = last_date.isoformat()
@@ -75,12 +91,12 @@ else:
                 crystal_weight = Decimal(int(trait["value"]))
         if not crystal_type:
             continue
+        if crystal_type not in all_types:
+            continue
         current_last_sale = {}
         current_last_sale["timestamp"] = event["transaction"]["timestamp"]
         current_last_sale["price"] = Decimal(int(event["total_price"])) / Decimal((10 ** 18))
         current_last_sale["weight"] = crystal_weight
-
-        print(current_last_sale)
 
         update_type_table_response = update_type_table(type_table, crystal_type, current_last_sale)
         if update_type_table_response:
