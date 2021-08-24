@@ -40,7 +40,7 @@ for _ in range(3):
             if entry["last_sale"]:
                 continue
         driver.get(entry["last_sale_url"])
-        time.sleep(1)
+        time.sleep(0.5)
         content = driver.page_source
         soup = BeautifulSoup(content, features="lxml")
         i = 0
@@ -57,7 +57,7 @@ for _ in range(3):
                 current_last_sale = None
                 break
             driver.get(entry_link)
-            time.sleep(0.5)
+            time.sleep(0.25)
             content = driver.page_source
             soup = BeautifulSoup(content, features="lxml")
             weight = int(soup.find_all("div", class_="NumericTrait--value")[0].text.split(" ")[0].replace(",", ""))
@@ -78,6 +78,7 @@ for _ in range(3):
             timestamp = datetime.strftime(datetime.strptime(raw_date, "%b-%d-%Y %I:%M:%S %p"), "%Y-%m-%dT%H:%M:%S")
             current_last_sale["timestamp"] = timestamp
             crystal_types[idx]["last_sale"] = current_last_sale
+            print(entry["crystal_type"])
             print(current_last_sale)
             update_response = update_type_table(table, entry["crystal_type"], current_last_sale)
             break
