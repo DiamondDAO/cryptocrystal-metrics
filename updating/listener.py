@@ -5,7 +5,6 @@ import time
 from bs4 import BeautifulSoup
 from datetime import datetime
 import boto3
-import pandas as pd
 from decimal import Decimal
 import json
 from util.selenium_util import generate_driver_settings
