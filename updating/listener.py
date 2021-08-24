@@ -48,7 +48,6 @@ events = response.get("asset_events", [])
 if not events:
     print("No events this time")
 else:
-    last_date = datetime.strptime(events[0]["transaction"]["timestamp"], "%Y-%m-%dT%H:%M:%S") + timedelta(seconds=1)
     while True:
         offset += 50
         event_querystring["offset"] = offset
