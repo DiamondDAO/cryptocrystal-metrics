@@ -46,7 +46,6 @@ event_querystring["offset"] = offset
 response = requests.request("GET", event_url, headers=headers, params=event_querystring).json()
 events = response.get("asset_events", [])
 if not events:
-    last_date = datetime.now().replace(microsecond=0)
     print("No events this time")
 else:
     last_date = datetime.strptime(events[0]["transaction"]["timestamp"], "%Y-%m-%dT%H:%M:%S") + timedelta(seconds=1)
@@ -103,6 +102,9 @@ else:
         commit_response = update_type_table_repo(repo, "docs/index.html", new_table_html)
         print(commit_response)
         new_changes = 0
+
+if last_date + timedelta(days=1) < datetime.now():
+    last_date = last_date + timedelta(days=1)
 
 with open(main_data_path, "w") as file:
     file.write(last_date.isoformat())
